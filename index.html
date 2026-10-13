@@ -86,15 +86,22 @@
     }
 
     .logo-icon {
-      width: 34px;
-      height: 34px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #7fc4c8, #4d99a0);
+      overflow: hidden;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(91, 168, 174, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .logo-text {
@@ -1683,6 +1690,131 @@
       color: #fff;
     }
 
+    /* ==================== 第二页 · 千佛山3D旋转预览开幕 ==================== */
+    .map-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      /* 改为白色背景 */
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .map-intro.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* 9:16 竖屏视频舞台，居中显示，完整不裁切 */
+    .map-intro-inner {
+      position: relative;
+      width: min(100%, calc(100dvh * 9 / 16));
+      aspect-ratio: 9 / 16;
+      max-height: 100dvh;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #ffffff;
+      /* 改为白色背景 */
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    #mapIntroVideo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* 完整显示整个视频，不裁切 */
+      display: block;
+      background: transparent;
+      /* 透明背景，让容器的白色透出来 */
+    }
+
+    .map-intro-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 60px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0) 100%);
+      color: #fff;
+      z-index: 2;
+      pointer-events: none;
+      animation: mapIntroUp 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes mapIntroUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .map-intro-caption h3 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      margin-bottom: 5px;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .map-intro-caption p {
+      font-size: 11.5px;
+      opacity: 0.82;
+      letter-spacing: 0.4px;
+    }
+
+    .map-intro-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2.5px;
+      background: rgba(255, 255, 255, 0.16);
+      z-index: 3;
+    }
+
+    .map-intro-progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #9fe0e4, #ffffff);
+      border-radius: 0 2px 2px 0;
+      transition: width 0.25s linear;
+    }
+
+    #mapIntroSkip {
+      position: absolute;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      right: 14px;
+      z-index: 4;
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: rgba(255, 255, 255, 0.92);
+      padding: 6px 13px;
+      border-radius: 18px;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 0.25s;
+    }
+
+    #mapIntroSkip:active {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
     /* ==================== 实时导航 ==================== */
     .photo-nav {
       margin-top: 10px;
@@ -1931,10 +2063,7 @@
     <header class="header">
       <div class="logo">
         <div class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 20l6-12 5 8 3-4 4 8z" />
-          </svg>
+          <img src="logo.jpg" alt="云上千佛" />
         </div>
         <div class="logo-text">
           <span class="cn">云上千佛</span>
@@ -2143,6 +2272,24 @@
           <span class="season-month">12-2月</span>
           <div class="season-name">冬季运动赏雪推荐</div>
         </div>
+      </div>
+    </div>
+
+    <!-- ==================== 第二页 · 千佛山3D旋转预览开幕 ==================== -->
+    <div class="map-intro" id="mapIntro" aria-hidden="true">
+      <div class="map-intro-inner">
+        <video id="mapIntroVideo" src="千佛山3D旋转预览.mp4" muted playsinline preload="metadata" loop></video>
+
+        <div class="map-intro-caption">
+          <h3>千佛山 · 3D 旋转预览</h3>
+          <p>360° 环视山体全貌 · 即将进入乡旅地图</p>
+        </div>
+
+        <div class="map-intro-progress">
+          <div class="map-intro-progress-bar" id="mapIntroBar"></div>
+        </div>
+
+        <button id="mapIntroSkip">跳过 <span id="mapIntroCount">10</span></button>
       </div>
     </div>
 
@@ -2818,6 +2965,9 @@
       if (scrollTop) window.scrollTo({ top: 0 });
       if (pageId === 'mine') renderMine();
       if (pageId === 'route') backToRouteList();   // 每次进入路线页都先显示卡片列表
+      if (pageId === 'map' && window.MapIntro) {   // 进入第二页播放 3D 旋转预览
+        setTimeout(() => window.MapIntro.open(), 120);
+      }
     }
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -3582,6 +3732,91 @@
       if (tryPlay && typeof tryPlay.catch === 'function') {
         tryPlay.catch(() => closeSplash());
       }
+    })();
+
+    /* ============================================================
+       第二页 · 千佛山3D旋转预览开幕
+       ============================================================ */
+    (function () {
+      const wrap = document.getElementById('mapIntro');
+      const video = document.getElementById('mapIntroVideo');
+      const skip = document.getElementById('mapIntroSkip');
+      const countEl = document.getElementById('mapIntroCount');
+      const bar = document.getElementById('mapIntroBar');
+      if (!wrap || !video) return;
+
+      const COUNTDOWN = 10;     // 跳过倒计时（秒）→ 开幕总时长约 10 秒
+      const MAX_SHOW = 20000;  // 最长展示时间，兜底
+      const CLOSE_WAIT = 600;    // 淡出动画时长
+
+      let state = 'idle';        // idle | playing | closing
+      let cdTimer = null, maxTimer = null, guardTimer = null;
+
+      function clearTimers() {
+        clearInterval(cdTimer); clearTimeout(maxTimer); clearTimeout(guardTimer);
+        cdTimer = maxTimer = guardTimer = null;
+      }
+
+      function close() {
+        if (state !== 'playing') return;
+        state = 'closing';
+        clearTimers();
+        wrap.classList.remove('show');
+        wrap.setAttribute('aria-hidden', 'true');
+        try { video.pause(); } catch (e) { }
+        setTimeout(() => {
+          try { video.currentTime = 0; } catch (e) { }
+          bar.style.width = '0%';
+          countEl.textContent = COUNTDOWN;
+          state = 'idle';
+        }, CLOSE_WAIT);
+      }
+
+      function open() {
+        if (state !== 'idle') return;
+        state = 'playing';
+
+        bar.style.width = '0%';
+        countEl.textContent = COUNTDOWN;
+        wrap.classList.add('show');
+        wrap.setAttribute('aria-hidden', 'false');
+
+        // 跳过倒计时：10 → 0，归零自动关闭
+        let cd = COUNTDOWN;
+        cdTimer = setInterval(() => {
+          cd -= 1;
+          if (cd <= 0) { clearInterval(cdTimer); cdTimer = null; close(); return; }
+          countEl.textContent = cd;
+        }, 1000);
+
+        // 视频加载不出来 → 直接跳过，不卡住用户
+        guardTimer = setTimeout(() => { if (video.readyState < 2) close(); }, 3500);
+
+        try { video.currentTime = 0; } catch (e) { }
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => close());
+
+        maxTimer = setTimeout(close, MAX_SHOW);
+      }
+
+      video.addEventListener('playing', () => {
+        clearTimeout(guardTimer); guardTimer = null;
+      });
+
+      // 进度条：视频加了 loop，播完一轮会回到 0 重新走，进度条也跟着循环
+      video.addEventListener('timeupdate', () => {
+        if (video.duration && isFinite(video.duration)) {
+          bar.style.width = (video.currentTime / video.duration * 100) + '%';
+        }
+      });
+
+      // 注意：视频加了 loop 后不会触发 ended，关闭完全交给 10 秒倒计时
+
+      video.addEventListener('error', close);
+      skip.addEventListener('click', close);
+
+      // 暴露给页面切换逻辑
+      window.MapIntro = { open, close };
     })();
   </script>
 </body>
